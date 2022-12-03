@@ -1,0 +1,5 @@
+/build
+/log/
+/relase/
+/debug/
+*.log
