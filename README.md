@@ -153,7 +153,7 @@ git submodule foreach 'git pull origin master'
 <img src="images/OrderManager.png" width="100%">
 
 ## 参考资料
-- **[《QuantFabric量化交易系统构建实践》课程](https://study.163.com/course/courseMain.htm?courseId=1212500814&share=2&shareId=480000002281617)**
+- **[《QuantFabric量化交易系统构建实践》课程](https://ke.qq.com/course/5947029#term_id=106168693)**
 - **[《量化IT》专栏](https://blog.csdn.net/a642960662/category_11641151.html)**
 - **[《Linux性能优化》专栏](https://blog.csdn.net/a642960662/category_11641226.html)**
 - **[《Qt开发》专栏](https://blog.csdn.net/a642960662/category_11657198.html)**
