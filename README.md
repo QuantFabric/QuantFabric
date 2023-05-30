@@ -115,6 +115,32 @@ git submodule foreach 'git pull origin master'
   - 将仓位、资金、订单回报写入Report内存队列。
   - 将仓位、资金、订单回报发送至XWatcher。
 - 项目地址：[XTrader](https://github.com/QuantFabric/XTrader)
+### HFTrader高频交易组件
+- 商业版，不开源。
+- HFTrader性能指标如下：
+```bash
+Perf Indicator:Tick2Order (ns)
+count: 405
+min: 785
+max: 3237
+first: 785
+mean: 1275.87
+median: 1147
+std: 449.36
+10%: 916
+20%: 951
+30%: 1002
+40%: 1076
+50%: 1147
+60%: 1249
+70%: 1335
+75%: 1395
+80%: 1460
+85%: 1525
+90%: 1673
+95%: 2390
+99%: 3012
+```
 
 ### Tools
 - 工具箱，提供工具如下：
@@ -153,7 +179,7 @@ git submodule foreach 'git pull origin master'
 <img src="images/OrderManager.png" width="100%">
 
 ## 参考资料
-- **[《QuantFabric量化交易系统构建实践》课程](https://ke.qq.com/course/5947029#term_id=106168693)**
+- **[《量化IT工程师实战》课程](https://ke.qq.com/course/package/84811?tuin=2652cd16)**
 - **[《量化IT》专栏](https://blog.csdn.net/a642960662/category_11641151.html)**
 - **[《Linux性能优化》专栏](https://blog.csdn.net/a642960662/category_11641226.html)**
 - **[《Qt开发》专栏](https://blog.csdn.net/a642960662/category_11657198.html)**
@@ -167,8 +193,5 @@ git submodule foreach 'git pull origin master'
   - 3、会员在非工作时间可享一对一语音指导服务，次数受限，需提前预约。
   - 4、会员服务时间期限1年，暂只针对个人提供，目前定价1200元/年，暂不提供发票。会员续费目前只能在会员服务期满前1个月进行续费。
   - 5、购买《QuantFabric量化交易系统构建实践》课程将赠送QuantFabric会员服务1年。
-  - 6、购买《HFTrader高频交易系统构建实践》课程（尚未推出）将赠送QuantFabric会员服务1年。
-  - 7、同时购买《QuantFabric量化交易系统构建实践》课程和《HFTrader高频交易系统构建实践》课程（尚未推出），则会员服务期限可累加，可享2年QuantFabric会员服务。
-  - 8、QuantFabric课程和QuantFabric会员服务价格将视QuantFabric增加功能进行适当提价。
-  - 9、针对购买QuantFabric课程的在读大专生、本科生、研究生、博士生以及毕业一年内学生，如果因为IT基础薄弱，需要延长会员服务期限的，可以申请延长，经审核通过，最多可以延长6个月。
-  - 10、服务推荐：IT基础薄弱人员，建议购买QuantFabric课程进行学习；非量化行业的IT从业人员，建议购买QuantFabric课程或购买会员服务。
+  - 6、针对购买QuantFabric课程的在读大专生、本科生、研究生、博士生以及毕业一年内学生，如果因为IT基础薄弱，需要延长会员服务期限的，可以申请延长，经审核通过，最多可以延长6个月。
+  - 7、服务推荐：IT基础薄弱人员，建议购买QuantFabric课程进行学习；非量化行业的IT从业人员，建议购买QuantFabric课程或购买会员服务。
