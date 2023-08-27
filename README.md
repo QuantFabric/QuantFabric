@@ -179,7 +179,7 @@ std: 449.36
 <img src="images/OrderManager.png" width="100%">
 
 ## 参考资料
-- **[《量化IT工程师实战》课程](https://ke.qq.com/course/package/84811?tuin=2652cd16)**
+- **[《量化IT工程师实战》课程](https://www.cctalk.com/m/group/90943064)**
 - **[《量化IT》专栏](https://blog.csdn.net/a642960662/category_11641151.html)**
 - **[《Linux性能优化》专栏](https://blog.csdn.net/a642960662/category_11641226.html)**
 - **[《Qt开发》专栏](https://blog.csdn.net/a642960662/category_11657198.html)**
