@@ -1,3 +1,11 @@
+## QuantFabric开发学习参考资料
+- **[《量化IT工程师实战》课程](https://zt.cctalk.com/action?subjectId=16938925595213)**
+- **[《量化IT》专栏](https://blog.csdn.net/a642960662/category_11641151.html)**
+- **[《Linux性能优化》专栏](https://blog.csdn.net/a642960662/category_11641226.html)**
+- **[《Qt开发》专栏](https://blog.csdn.net/a642960662/category_11657198.html)**
+- **量化IT技术QQ群：748930268**，加群验证码：QuantFabric
+
+
 # QuantFabric量化交易系统
 ## QuantFabric简介
 - QuantFabric是基于Linux/C++开发的中高频量化交易系统，支持中金所、郑商所、大商所、上期所、上海国际能源中心的期货业务品种交易，支持上交所、深交所的股票、债券品种交易。
