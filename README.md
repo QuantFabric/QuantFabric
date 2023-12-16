@@ -1,5 +1,5 @@
 ## QuantFabric开发学习参考资料
-- **[《量化IT工程师实战》课程](https://lhitjs.360dhf.cn/)**
+- **[《量化IT工程师实战》课程](https://lhitjs.360dhf.cn/video)**
 - **[《量化IT》专栏](https://blog.csdn.net/a642960662/category_11641151.html)**
 - **[《Linux性能优化》专栏](https://blog.csdn.net/a642960662/category_11641226.html)**
 - **[《Qt开发》专栏](https://blog.csdn.net/a642960662/category_11657198.html)**
@@ -187,7 +187,7 @@ std: 449.36
 <img src="images/OrderManager.png" width="100%">
 
 ## 参考资料
-- **[《量化IT工程师实战》课程](https://zt.cctalk.com/action?subjectId=16938925595213)**
+- **[《量化IT工程师实战》课程](https://lhitjs.360dhf.cn/video)**
 - **[《量化IT》专栏](https://blog.csdn.net/a642960662/category_11641151.html)**
 - **[《Linux性能优化》专栏](https://blog.csdn.net/a642960662/category_11641226.html)**
 - **[《Qt开发》专栏](https://blog.csdn.net/a642960662/category_11657198.html)**
