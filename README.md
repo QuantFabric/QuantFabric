@@ -118,7 +118,7 @@
 - XTest是QuantFabric框架部署测试用例，提供了QuantFabric各个组件的部署实例。
 - 在Linux服务器创建xtrader用户，并在xtrader主目录下执行：
   ```bash
-  git clone https://github.com/QuantFabric/XTest.git XTest
+  git clone git@github.com:QuantFabric/XTest.git XTest
   ```
 - 按顺序启动XServer、XWatcher、XRiskJudge、XMarketCenter、XTrader等组件。
   ```bash
@@ -148,7 +148,7 @@
 
 - **安装pybind11**：
   ```bash
-  git clone https://github.com/pybind/pybind11.git  pybind11
+  git clone git@github.com:pybind/pybind11.git  pybind11
   cd pybind11
   mkdir build
   cd build
