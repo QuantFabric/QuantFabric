@@ -16,15 +16,12 @@
 [submodule "XMarketCenter"]
 	path = XMarketCenter
 	url = git@github.com:QuantFabric/XMarketCenter.git
-[submodule "XDataPlayer"]
-	path = XDataPlayer
-	url = git@github.com:QuantFabric/XDataPlayer.git
 [submodule "XAPI"]
 	path = XAPI
 	url = git@github.com:QuantFabric/XAPI.git
 [submodule "Utils"]
 	path = Utils
 	url = git@github.com:QuantFabric/Utils.git
-[submodule "Tools"]
-	path = Tools
-	url = git@github.com:QuantFabric/Tools.git
+[submodule "SHMServer"]
+	path = SHMServer
+	url = git@github.com:QuantFabric/SHMServer.git

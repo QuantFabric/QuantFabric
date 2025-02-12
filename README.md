@@ -16,10 +16,6 @@
 - QuantFabric目前支持股票交易柜台如下：
   - 宽睿OES
 
-- QuantFabric计划支持股票交易柜台如下：
-  - 中泰XTP
-  - 华鑫奇点
-  - 华锐ATP
 
 - QuantFabric量化交易系统架构如下：
 <img src="images/QuantFabric.png" width="100%">
@@ -30,35 +26,28 @@
 ## 编译构建
 ### QuantFabric
 - **登录GitCode或GitHub，增加SSH Key认证方式**。
-- QuantFabric量化交易系统下载：
-```bash
-git clone --recursive git@github.com:QuantFabric/QuantFabric.git
-```
+- **QuantFabric量化交易系统下载**：
+  ```bash
+  git clone --recurse-submodules git@github.com:QuantFabric/QuantFabric.git
+  ```
 
-- QuantFabric编译构建：
+- **安装SQLite3开发工具包**：
+  ```bash
+  yum install sqlite-devel
+  ```
 
-```bash
-cd QuantFabric			# 进入QuantFabric目录
-git submodule init		# 初始化子模块
-git submodule update --remote	# 更新子模块
-sh build_release.sh		# 编译构建
-```
+- **QuantFabric编译构建**：
+
+  ```bash
+  cd QuantFabric			# 进入QuantFabric目录
+  git submodule init		# 初始化子模块
+  git submodule update --remote	# 更新子模块
+  sh build_release.sh		# 编译构建
+  ```
 
 - 编译构建完成时，可执行文件和so文件位于build目录下。
 
-- 单个子模块更新代码：
 
-```bash
-cd XMonitor
-git pull origin master
-```
-
-- 多个子模块遍历更新代码：
-
-```bash
-git submodule update --remote
-git submodule foreach 'git pull origin master'
-```
 
 ### XMonitor
 - GUI客户端XMonitor编译构建流程如下：
@@ -123,9 +112,83 @@ git submodule foreach 'git pull origin master'
   - 将仓位、资金、订单回报写入Report内存队列。
   - 将仓位、资金、订单回报发送至XWatcher。
 - 项目地址：[XTrader](https://github.com/QuantFabric/XTrader)
+
+
+### XTest
+- XTest是QuantFabric框架部署测试用例，提供了QuantFabric各个组件的部署实例。
+- 在Linux服务器创建xtrader用户，并在xtrader主目录下执行：
+  ```bash
+  git clone https://github.com/QuantFabric/XTest.git XTest
+  ```
+- 按顺序启动XServer、XWatcher、XRiskJudge、XMarketCenter、XTrader等组件。
+  ```bash
+  sh /home/xtrader/XTest/XServer/run.sh
+  sudo sh /home/xtrader/XTest/XWatcher/run.sh
+  sh /home/xtrader/XTest/XRiskJudge/run.sh
+  sh /home/xtrader/XTest/CTPMarket/run.sh
+  sudo sh /home/xtrader/XTest/CTPTrader/run.sh
+  # 可以进入相应组件目录后执行run.sh
+  # 关闭相应组件时执行stop.sh
+  ```
+- XMonitor监控客户端启动：
+  ```bash
+  # 打包依赖库到当前目录Lib目录下，执行一次即可
+  /home/xtrader/XTest/XMonitor/DeployApp.sh XMonitor_0.9.0
+  sh /home/xtrader/XTest/XMonitor/run.sh
+    ```
+- 项目地址：[XTest](https://github.com/QuantFabric/XTest)
+
+### SHMServer
+- SHMServer是一个基于共享内存实现进程间通信的服务端，提供发布订阅模式和CS模式的通信。
+- 根据不同客户端划分通信信道，每个信道包含一个SPSC发送队列和SPSC接收队列，服务端的发送队列和接收队列分别对应一个客户端的接收队列和发送队列。
+- **CPython API开发工具包安装**：
+  ```bash
+  yum install python3-devel
+  ```
+
+- **安装pybind11**：
+  ```bash
+  git clone https://github.com/pybind/pybind11.git  pybind11
+  cd pybind11
+  mkdir build
+  cd build
+  cmake ..
+  cmake --build . --config Release --target check
+  make
+  make install
+  ```
+
+- **SHMServer编译构建**：
+  ```bash
+  cd SHMServer
+  cd pybind11
+  mkdir build
+  cd build
+  cmake ..
+  make
+  ```
+- **SHMServer Python扩展包如下**:
+  ```bash
+  pack_message.cpython-39-x86_64-linux-gnu.so
+  shm_server.cpython-39-x86_64-linux-gnu.so
+  shm_connection.cpython-39-x86_64-linux-gnu.so
+  spscqueue.cpython-39-x86_64-linux-gnu.so
+  ```
+
+
 ### HFTrader高频交易组件
 - 商业版，不开源。
-- HFTrader性能指标如下：
+- 高频交易系统对于延迟更敏感，因此需要将行情网关、交易网关、策略模块整合到单进程，高频交易系统架构设计如下：
+<img src="images/HFTraderThread.png" width="100%">
+- HFTrader包括行情、策略、交易、监控四个模块，每个模块创建一个线程运行，其中行情、策略、交易建议分别绑定隔离CPU提高性能,HFTrader进程启动时建议绑定CPU，因此每个HFTrader实例占用4个CPU。
+- HFTrader支持柜台如下：
+  - CTP期货柜台
+  - 盛立REM期货柜台
+  - 易达YD期货柜台
+  - 中泰XTP股票柜台
+  - 华鑫Tora股票柜台
+
+- HFTrader使用YD易达柜台API在CPU超频5.0G并绑定线程CPU时测试性能指标如下：
 ```bash
 Perf Indicator:Tick2Order (ns)
 count: 405
@@ -150,11 +213,25 @@ std: 449.36
 99%: 3012
 ```
 
-### Tools
-- 工具箱，提供工具如下：
-  - OrderSend：提供批量报单功能，订单写入内存队列。
-  - MarketReader：提供行情数据导出功能，从内存行情队列导出行情数据。
-- 项目地址：[Tools](https://github.com/QuantFabric/Tools)
+### StrikeBoarder打板交易组件
+- 商业版，不开源。
+- StrikeBoarder量化打板交易系统是一款基于高频交易低延迟技术专为A股打板族设计的程序化打板交易系统，目前支持华鑫Tora、中泰XTP交易柜台，支持自动算法打板和手动打板。
+- StrikeBoarder量化打板交易系统使用C++语言特性、无锁队列、多线程编程、低延迟网卡，为A股打板交易个人和团队提供低延迟高频交易基础设施方案，拥有低延迟的极速性能，让打板不再慢人一步。
+<img src="images/StrikeBoarder.png" width="100%">
+- StrikeBoader量化打板交易系统包括StrikeTrader和StrikeBoardGUI，StrikeTrader是部署在券商交易所托管机房的服务端，执行自动打板算法和手动打板任务，StrikeBoardGUI是部署在投资者服务器的GUI监控客户端，提供自动打板算法生成任务和手动打板任务的监控，提供手动普通买卖股票报单功能，仓位、订单监控、实时行情展示等交互功能。
+<img src="images/StrikeBoarderThread.png" width="100%">
+- 打板功能：
+<img src="images/DaBanMenu.png" width="100%">
+- 扫板功能：
+<img src="images/SaoBanMenu.png" width="100%">
+- 排板功能：
+<img src="images/PaiBanMenu.png" width="100%">
+- 回封板功能：
+<img src="images/HuiFengBanMenu.png" width="100%">
+- 平仓功能：
+<img src="images/ClosePositionMenu.png" width="100%">
+- 普通买卖功能：
+<img src="images/BuySellMenu.png" width="100%">
 
 ### FinTechUI
 - 基于Qt封装的金融科技UI组件，支持冻结列TableView、多层次表头HeaderView、自定义排序过滤模型、自定义Button代理、自定义Progress代理、自定义ComboBox代理、自定义表格模型XTableModel、可拖拽式UI插件框架。

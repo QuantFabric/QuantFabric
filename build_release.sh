@@ -3,4 +3,4 @@ mkdir build
 fi
 cd build
 cmake -DCMAKE_BUILD_TYPE=Release ..
-make -j2
+make -j8
