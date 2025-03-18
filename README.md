@@ -182,6 +182,10 @@
 
 - 项目地址：[XQuant](https://github.com/QuantFabric/XQuant)
 
+
+- 基于XMarketCenter、XRiskJudge、XTrader、XQuant(C++)交易组件构成的中高频交易系统Tick2Order中位数在50-60us，使用AMD EPYC 7K62 CPU进行测试，主频2600MHZ。
+- 如果需要更低延迟，请绑定XMarketCenter、XRiskJudge、XTrader、XQuant(C++)交易组件的关键线程到CPU，并尽可能使用高频交易服务器，超频至4.8GHZ以上，Tick2Order中位数可以降低至20us以下。
+
 ### HFTrader高频交易组件
 - 商业版，不开源。
 - 高频交易系统对于延迟更敏感，因此需要将行情网关、交易网关、策略模块整合到单进程，高频交易系统架构设计如下：
@@ -259,21 +263,21 @@ std: 449.36
 - 商业版，不开源。
 - StrikeBoarder量化打板交易系统是一款基于高频交易低延迟技术专为A股打板族设计的程序化打板交易系统，目前支持华鑫Tora、中泰XTP交易柜台，支持自动算法打板和手动打板。
 - StrikeBoarder量化打板交易系统使用C++语言特性、无锁队列、多线程编程、低延迟网卡，为A股打板交易个人和团队提供低延迟高频交易基础设施方案，拥有低延迟的极速性能，让打板不再慢人一步。
-<img src="images/StrikeBoarder.png" width="100%">
+  <img src="images/StrikeBoarder.png" width="100%">
 - StrikeBoader量化打板交易系统包括StrikeTrader和StrikeBoardGUI，StrikeTrader是部署在券商交易所托管机房的服务端，执行自动打板算法和手动打板任务，StrikeBoardGUI是部署在投资者服务器的GUI监控客户端，提供自动打板算法生成任务和手动打板任务的监控，提供手动普通买卖股票报单功能，仓位、订单监控、实时行情展示等交互功能。
-<img src="images/StrikeBoarderThread.png" width="100%">
+  <img src="images/StrikeBoarderThread.png" width="100%">
 - 打板功能：
-<img src="images/DaBanMenu.png" width="100%">
+  <img src="images/DaBanMenu.png" width="100%">
 - 扫板功能：
-<img src="images/SaoBanMenu.png" width="100%">
+  <img src="images/SaoBanMenu.png" width="100%">
 - 排板功能：
-<img src="images/PaiBanMenu.png" width="100%">
+  <img src="images/PaiBanMenu.png" width="100%">
 - 回封板功能：
-<img src="images/HuiFengBanMenu.png" width="100%">
+  <img src="images/HuiFengBanMenu.png" width="100%">
 - 平仓功能：
-<img src="images/ClosePositionMenu.png" width="100%">
+  <img src="images/ClosePositionMenu.png" width="100%">
 - 普通买卖功能：
-<img src="images/BuySellMenu.png" width="100%">
+  <img src="images/BuySellMenu.png" width="100%">
 
 
 - **QuantFabric开源项目贡献者列表：**
