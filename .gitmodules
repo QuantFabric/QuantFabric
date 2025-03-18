@@ -25,3 +25,6 @@
 [submodule "SHMServer"]
 	path = SHMServer
 	url = git@github.com:QuantFabric/SHMServer.git
+[submodule "XQuant"]
+	path = XQuant
+	url = git@github.com:QuantFabric/XQuant.git

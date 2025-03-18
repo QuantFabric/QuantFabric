@@ -8,7 +8,7 @@
 
 # QuantFabric量化交易系统
 ## QuantFabric简介
-- QuantFabric是基于Linux/C++开发的中高频量化交易系统，支持中金所、郑商所、大商所、上期所、上海国际能源中心的期货业务品种交易，支持上交所、深交所的股票、债券品种交易。
+- QuantFabric是基于Linux C++/Python开发的中高频量化交易系统，支持中金所、郑商所、大商所、上期所、上海国际能源中心的期货业务品种交易，支持上交所、深交所的股票、债券品种交易。
 - QuantFabric目前支持期货交易柜台如下：
   - CTP
   - 盛立REM
@@ -46,7 +46,6 @@
   ```
 
 - 编译构建完成时，可执行文件和so文件位于build目录下。
-
 
 
 ### XMonitor
@@ -91,8 +90,7 @@
 ### XMarketCenter
 - 行情网关，采用插件架构，适配不同Broker柜台行情API，主要功能如下：
   - 收取行情数据；
-  - 打包行情切片数据写入共享内存队列；
-  - 行情数据落地；
+  - 行情数据写入共享内存队列；
   - 行情数据转发至XWatcher监控组件。
 - 项目地址：[XMarketCenter](https://github.com/QuantFabric/XMarketCenter)
 
@@ -107,35 +105,29 @@
 ### XTrader
 - 交易网关，采用插件架构适配不同Broker柜台交易API，主要功能如下：
   - 从网络客户端收取手动报单、撤单请求。
-  - 从Order内存队列读取报单、撤单请求。
+  - 从共享内存队列读取报单、撤单请求。
   - 执行报单、撤单指令，管理订单回报。
-  - 将仓位、资金、订单回报写入Report内存队列。
+  - 将仓位、资金、订单回报写入共享内存队列。
   - 将仓位、资金、订单回报发送至XWatcher。
 - 项目地址：[XTrader](https://github.com/QuantFabric/XTrader)
 
 
+### XDataPlayer
+- 行情数据转发组件，用于将XServer接收的行情数据分发到无行情服务的交易服务器，提供交易使用，或回放CSV行情数据文件。
+- 项目地址：[XDataPlayer](https://github.com/QuantFabric/XDataPlayer)
+
+
 ### XTest
-- XTest是QuantFabric框架部署测试用例，提供了QuantFabric各个组件的部署实例。
-- 在Linux服务器创建xtrader用户，并在xtrader主目录下执行：
-  ```bash
-  git clone git@github.com:QuantFabric/XTest.git XTest
-  ```
-- 按顺序启动XServer、XWatcher、XRiskJudge、XMarketCenter、XTrader等组件。
-  ```bash
-  sh /home/xtrader/XTest/XServer/run.sh
-  sudo sh /home/xtrader/XTest/XWatcher/run.sh
-  sh /home/xtrader/XTest/XRiskJudge/run.sh
-  sh /home/xtrader/XTest/CTPMarket/run.sh
-  sudo sh /home/xtrader/XTest/CTPTrader/run.sh
-  # 可以进入相应组件目录后执行run.sh
-  # 关闭相应组件时执行stop.sh
-  ```
-- XMonitor监控客户端启动：
-  ```bash
-  # 打包依赖库到当前目录Lib目录下，执行一次即可
-  /home/xtrader/XTest/XMonitor/DeployApp.sh XMonitor_0.9.0
-  sh /home/xtrader/XTest/XMonitor/run.sh
-    ```
+- XTest是QuantFabric量化交易系统的测试用例集合，可以作为QuantFabric开发和学习过程中测试使用，所使用测试环境为不同柜台厂商提供的仿真测试环境，可以直接运行。主要组件如下：
+    - XServer：QuantFabric交易系统中间件，部署在用户侧、公司侧。
+    - XWatcher：交易监控组件，部署在交易服务器，监控交易服务器的交易组件和交易服务器性能指标。
+    - XRiskJudge：交易风控系统，提供防自成交、流速、撤单限制等风控功能。
+    - XMarketCenter：行情网关，采用插件架构，通过加载不同插件适配不同柜台的行情API。
+    - XTrader：交易网关，采用插件架构，通过加载不同插件适配不同柜台的交易API。
+    - XQuant：策略进程，通过内存通道读取行情数据出发交易信号，将报单、撤单请求通过内存通过发送到XTrader交易网关，并读取从XTrader交易网关返回的订单状态、仓位信息、资金信息。
+    - XDataPalyer：行情数据转发组件，用于将XServer收到的行情数据分发到不能获取行情的交易服务器。
+    - HFTrader：高频交易组件，将行情、交易、策略整合到一个进程，提供ns级别的系统内部延迟。
+
 - 项目地址：[XTest](https://github.com/QuantFabric/XTest)
 
 ### SHMServer
@@ -175,6 +167,20 @@
   spscqueue.cpython-39-x86_64-linux-gnu.so
   ```
 
+- **SHMServer的Python扩展作为QuantFabric支持Python开发的基础组件，使得QuantFabric的量化交易组件可以充分利用Python生态开发交易策略，同时兼顾性能，适合中频交易策略**。
+
+- 项目地址：[SHMServer](https://github.com/QuantFabric/SHMServer)
+
+
+### XQuant
+- XQuant是QuantFabric的策略交易平台，提供C++和Python版本。
+- XQuant C++/Python版本使用SHMConnection C++版本与XMarketCenter、XRiskJudge、XTrader进行IPC通信：
+    - 通过MarketServer内存通道从XMarketCenter读取行情数据，进行计算后触发交易信号，将报单通写入OrderServer内存通道；
+    - XTrader从OrderServer内存通道读取报单请求，如果需要风控检查，则将报单请求写入RiskServer内存通道；如果不需要风控检查，则直接调用柜台API进行报单。
+    - XRiskJudge从RiskServer内存通道读取报单，进行风控检查，并将检查结果写入内存通道；
+    - XTrader从RiskServer内存通道读取报单检查结果，如果风控检查不通过，直接将订单状态信息返回监控系统；如果风控检查通过，则调用柜台API进行报单。
+
+- 项目地址：[XQuant](https://github.com/QuantFabric/XQuant)
 
 ### HFTrader高频交易组件
 - 商业版，不开源。
@@ -213,26 +219,6 @@ std: 449.36
 99%: 3012
 ```
 
-### StrikeBoarder打板交易组件
-- 商业版，不开源。
-- StrikeBoarder量化打板交易系统是一款基于高频交易低延迟技术专为A股打板族设计的程序化打板交易系统，目前支持华鑫Tora、中泰XTP交易柜台，支持自动算法打板和手动打板。
-- StrikeBoarder量化打板交易系统使用C++语言特性、无锁队列、多线程编程、低延迟网卡，为A股打板交易个人和团队提供低延迟高频交易基础设施方案，拥有低延迟的极速性能，让打板不再慢人一步。
-<img src="images/StrikeBoarder.png" width="100%">
-- StrikeBoader量化打板交易系统包括StrikeTrader和StrikeBoardGUI，StrikeTrader是部署在券商交易所托管机房的服务端，执行自动打板算法和手动打板任务，StrikeBoardGUI是部署在投资者服务器的GUI监控客户端，提供自动打板算法生成任务和手动打板任务的监控，提供手动普通买卖股票报单功能，仓位、订单监控、实时行情展示等交互功能。
-<img src="images/StrikeBoarderThread.png" width="100%">
-- 打板功能：
-<img src="images/DaBanMenu.png" width="100%">
-- 扫板功能：
-<img src="images/SaoBanMenu.png" width="100%">
-- 排板功能：
-<img src="images/PaiBanMenu.png" width="100%">
-- 回封板功能：
-<img src="images/HuiFengBanMenu.png" width="100%">
-- 平仓功能：
-<img src="images/ClosePositionMenu.png" width="100%">
-- 普通买卖功能：
-<img src="images/BuySellMenu.png" width="100%">
-
 ### FinTechUI
 - 基于Qt封装的金融科技UI组件，支持冻结列TableView、多层次表头HeaderView、自定义排序过滤模型、自定义Button代理、自定义Progress代理、自定义ComboBox代理、自定义表格模型XTableModel、可拖拽式UI插件框架。
 - 项目地址：[FinTechUI](https://github.com/QuantFabric/FinTechUI)
@@ -263,10 +249,48 @@ std: 449.36
 - OrderManager插件：提供报单、撤单功能；展示账户仓位信息；展示账户挂单信息；展示账户历史订单记录；展示账户资金信息。如下：
 <img src="images/OrderManager.png" width="100%">
 
-## 参考资料
-- **[《量化IT工程师实战》课程](https://lhitjs.360dhf.cn/video)**
-- **[《量化IT》专栏](https://blog.csdn.net/a642960662/category_11641151.html)**
-- **[《Linux性能优化》专栏](https://blog.csdn.net/a642960662/category_11641226.html)**
-- **[《Qt开发》专栏](https://blog.csdn.net/a642960662/category_11657198.html)**
-- **量化IT技术QQ群：748930268**，加群验证码：QuantFabric
+- FutureAnalysis插件：展示期货品种中不同交易策略当日交易的仓位，汇总同一账户下不同交易策略的交易仓位。
+<img src="images/FutureAnalysis.png" width="100%">
+
+- StockAnalysis插件：展示股票中不同交易策略当日交易的仓位，汇总同一账户下不同交易策略的交易仓位。
+<img src="images/StockAnalysis.png" width="100%">
+
+### StrikeBoarder打板交易组件
+- 商业版，不开源。
+- StrikeBoarder量化打板交易系统是一款基于高频交易低延迟技术专为A股打板族设计的程序化打板交易系统，目前支持华鑫Tora、中泰XTP交易柜台，支持自动算法打板和手动打板。
+- StrikeBoarder量化打板交易系统使用C++语言特性、无锁队列、多线程编程、低延迟网卡，为A股打板交易个人和团队提供低延迟高频交易基础设施方案，拥有低延迟的极速性能，让打板不再慢人一步。
+<img src="images/StrikeBoarder.png" width="100%">
+- StrikeBoader量化打板交易系统包括StrikeTrader和StrikeBoardGUI，StrikeTrader是部署在券商交易所托管机房的服务端，执行自动打板算法和手动打板任务，StrikeBoardGUI是部署在投资者服务器的GUI监控客户端，提供自动打板算法生成任务和手动打板任务的监控，提供手动普通买卖股票报单功能，仓位、订单监控、实时行情展示等交互功能。
+<img src="images/StrikeBoarderThread.png" width="100%">
+- 打板功能：
+<img src="images/DaBanMenu.png" width="100%">
+- 扫板功能：
+<img src="images/SaoBanMenu.png" width="100%">
+- 排板功能：
+<img src="images/PaiBanMenu.png" width="100%">
+- 回封板功能：
+<img src="images/HuiFengBanMenu.png" width="100%">
+- 平仓功能：
+<img src="images/ClosePositionMenu.png" width="100%">
+- 普通买卖功能：
+<img src="images/BuySellMenu.png" width="100%">
+
+
+- **QuantFabric开源项目贡献者列表：**
+
+|贡献者       |开发功能                           |备注     |
+|------------|-----------------------------------|------------|
+|天山老妖     | 基础框架、核心功能                  |  创建者    |
+
+
+
+
+- **支持QuantFabric开源事业**：
+<img src="images/wechat_pay.jpg" width="100%">
+
+- 注：捐款备注**捐助QuantFabric，姓名/昵称**，将进入QuantFabric开源项目捐助者列表。如需匿名，请忽略。
+
+|捐助者       |捐助时间       |捐助金额     |
+|------------|---------------|------------|
+
 
