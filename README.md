@@ -20,6 +20,9 @@
 - QuantFabric量化交易系统架构如下：
 <img src="images/QuantFabric.png" width="100%">
 
+- XServer、XMonitor是QuantFabric量化交易系统的公共基础设施。
+- XWatcher、XMarketCenter、XRiskJudge、XTrader、XQuant部署在交易服务器，XWatcher、XMarketCenter、XRiskJudge、XTrader开盘前启动后运行直至收盘，XQuant则根据日内交易策略随时在盘中可以进行启动、停止。
+
 - GitHub：[QuantFabric](https://github.com/QuantFabric/QuantFabric)
 
 
@@ -285,19 +288,20 @@ std: 449.36
 
 ## QuantFabric开源事业
 
-- **QuantFabric开源项目贡献者列表：**
+### **QuantFabric贡献者列表**
 
-|贡献者       |开发功能                           |备注     |
-|------------|-----------------------------------|------------|
-|天山老妖     | 基础框架、核心功能                  |  创建者    |
-
-
+  |贡献者       |开发功能                           |备注     |
+  |------------|-----------------------------------|------------|
+  |天山老妖     | 基础框架、核心功能                  |  创建者    |
 
 
-- **支持QuantFabric开源事业**：
+- **欢迎参与QuantFabric开发，适配更多柜台API，增加更多功能，让QuantFabric更优秀。**
+
+
+### **支持QuantFabric开源事业**：
 <img src="images/wechat_pay.jpg" width="100%">
 
 - 注：捐款备注**捐助QuantFabric，姓名/昵称**，将进入QuantFabric开源项目捐助者列表。如需匿名，请忽略。
 
-|捐助者       |捐助时间       |捐助金额     |
-|------------|---------------|------------|
+  |捐助者       |捐助时间       |捐助金额     |
+  |------------|---------------|------------|
