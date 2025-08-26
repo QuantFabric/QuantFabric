@@ -50,6 +50,55 @@
 
 - 编译构建完成时，可执行文件和so文件位于build目录下。
 
+#### Ubuntu
+- 如果在Ubuntu系统下编译报错信息：
+    <img src="images/compile_error.png" width="100%">
+- 解决方案：
+  - 1、检查YAML-CPP库文件是否存在
+  ```bash
+  ls -la ${CMAKE_CURRENT_SOURCE_DIR}/../XAPI/YAML-CPP/0.8.0/lib/
+  ```
+  - 确保使用正确的库文件名，使用完整库文件路径替换编译
+  ```cmake
+  target_link_libraries(${HFTrader_Version} 
+    pthread 
+    hpsocket4c 
+    ${CMAKE_CURRENT_SOURCE_DIR}/../XAPI/YAML-CPP/0.8.0/lib/libyaml-cpp.a  
+    dl
+    )
+  ```
+  - 添加YAML-CPP依赖项
+  ```cmake
+  target_link_libraries(${HFTrader_Version} 
+    pthread 
+    hpsocket4c 
+    dl
+    # ... 其他交易API库
+    yaml-cpp  # 将 yaml-cpp 移到最后
+    )
+  ```
+  - 重新编译YAML-CPP
+  ```bash
+  cd ${CMAKE_CURRENT_SOURCE_DIR}/../XAPI/YAML-CPP/0.8.0/
+  mkdir build
+  cd build
+  cmake .. -DCMAKE_CXX_FLAGS="-D_GLIBCXX_USE_CXX11_ABI=0"  # 与主项目一致的ABI设置
+  make
+  ```
+  - 使用find_package查找
+  ```cmake
+  find_package(yaml-cpp REQUIRED)
+  target_link_libraries(${HFTrader_Version} yaml-cpp)
+  ```
+  - 检查符号是否存在
+  ```bash
+  nm -C ${CMAKE_CURRENT_SOURCE_DIR}/../XAPI/YAML-CPP/0.8.0/lib/libyaml-cpp.a | grep "YAML::LoadFile"
+  ```
+
+  - 可以根据上述解决方法依次尝试解决，每次尝试确保清理并重新构建项目。根据实践，大部分情况下错误原因是ABI兼容问题引发，需要重新编译YAML-CPP，编译时指定`-D_GLIBCXX_USE_CXX11_ABI=0`；
+
+  - 注：可以将错误信息截图和CMakeLists.txt内容上传至DeepSeek，由DeepSeek给出解决方案。
+
 
 #### XMonitor
 - GUI客户端XMonitor编译构建流程如下：
