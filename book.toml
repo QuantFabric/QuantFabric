@@ -3,7 +3,7 @@ title = "QuantFabric 文档"
 authors = ["@scorpiostudio"]
 language = "zh-CN"
 multilingual = false
-src = "."
+src = "./doc"
 
 [build]
 build-dir = "book"
