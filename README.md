@@ -54,7 +54,7 @@
 - 如果在Ubuntu系统下编译报错信息：
     <img src="images/compile_error.png" width="100%">
 - 解决方案：
-  - 1、检查YAML-CPP库文件是否存在
+  - 检查YAML-CPP库文件是否存在
   ```bash
   ls -la ${CMAKE_CURRENT_SOURCE_DIR}/../XAPI/YAML-CPP/0.8.0/lib/
   ```
@@ -98,6 +98,49 @@
   - 可以根据上述解决方法依次尝试解决，每次尝试确保清理并重新构建项目。根据实践，大部分情况下错误原因是ABI兼容问题引发，需要重新编译YAML-CPP，编译时指定`-D_GLIBCXX_USE_CXX11_ABI=0`；
 
   - 注：可以将错误信息截图和CMakeLists.txt内容上传至DeepSeek，由DeepSeek给出解决方案。
+
+#### RockyLinux安装Qt
+- RockyLinux 10.1
+- Qt5.12.12
+- 安装GUI：
+  ```bash
+  dnf groupinstall "Server with GUI" -y
+  dnf groupinstall "Development Tools"
+  ```
+- 常见错误：
+  ```
+  qt.qpa.xcb: could not connect to display
+  qt.qpa.plugin: Could not load the Qt platform plugin "xcb" in "" even though it was found.
+  This application failed to start because no Qt platform plugin could be initialized. Reinstalling the application may fix this problem.
+
+  Available platform plugins are: minimal, xcb.
+  ```
+- 开启调试日志：
+  ```bash
+  export QT_DEBUG_PLUGINS=1
+  export QT_QPA_PLATFORM=xcb
+  ```
+- 安装XCB依赖：
+  ```
+  dnf install libxkbcommon-x11
+  dnf install xcb-util-cursor
+  dnf install xcb-util-wm
+  dnf install xcb-util-image
+  dnf install xcb-util-keysyms
+  dnf install xcb-util-renderutil
+  dnf install libxcb-devel xcb-util* 
+  dnf install mesa-libGL-devel libX11-devel libxcb-devel fontconfig-devel
+  ```
+- 修改系统时间，绕过登录验证机制：
+  ```bash
+  date -s "2019-01-01"
+  ./qt-opensource-linux-x64-5.12.12.run
+  ```
+- 安装完成后，同步系统时间：
+  ```bash
+  sudo chronyc -a makestep
+  sudo hwclock --systohc # 同步系统时间到硬件时钟
+  ```
 
 
 #### XMonitor
