@@ -50,6 +50,21 @@
 
 - 编译构建完成时，可执行文件和so文件位于build目录下。
 
+#### YAML-CPP编译安装
+```bash
+git clone https://github.com/jbeder/yaml-cpp.git
+cd yaml-cpp
+mkdir build
+cd build/
+cmake -DCMAKE_CXX_FLAGS="-D_GLIBCXX_USE_CXX11_ABI=0" ..
+make
+cp libyaml-cpp.a XOS/QuantFabric/XAPI/YAML-CPP/0.9.0/lib
+cd ..
+cd include
+cp -rf yaml-cpp XOS/QuantFabric/XAPI/YAML-CPP/0.9.0/include/
+```
+- **建议搭建开发环境时重新编译构建YAML-CPP，替换静态库以及头文件**。
+
 #### Ubuntu
 - 如果在Ubuntu系统下编译报错信息：
     <img src="images/compile_error.png" width="100%">
@@ -142,21 +157,53 @@
   sudo hwclock --systohc # 同步系统时间到硬件时钟
   ```
 
+  Available platform plugins are: minimal, xcb.
+  ```
+- 开启调试日志：
+  ```bash
+  export QT_DEBUG_PLUGINS=1
+  export QT_QPA_PLATFORM=xcb
+  ```
+- 安装XCB依赖：
+  ```
+  dnf install libxkbcommon-x11
+  dnf install xcb-util-cursor
+  dnf install xcb-util-wm
+  dnf install xcb-util-image
+  dnf install xcb-util-keysyms
+  dnf install xcb-util-renderutil
+  dnf install libxcb-devel xcb-util* 
+  dnf install mesa-libGL-devel libX11-devel libxcb-devel fontconfig-devel
+  ```
+- 修改系统时间，绕过登录验证机制：
+  ```bash
+  date -s "2019-01-01"
+  ./qt-opensource-linux-x64-5.12.12.run
+  ```
+- 安装完成后，同步系统时间：
+  ```bash
+  sudo chronyc -a makestep
+  sudo hwclock --systohc # 同步系统时间到硬件时钟
+  ```
 
-#### XMonitor
-- GUI客户端XMonitor编译构建流程如下：
-```bash
-  cd XMonitor				# 进入XMonitor目录
-  git pull
-  git submodule init		# 初始化子模块
-  git submodule update --remote	# 更新子模块
-  mkdir build
-  cd build
-  qmake ..
-  make
-```
-- 编译完成时，可执行文件位于build目录下。
-- 由于CMake对于Qt工程构建不完美，本人仍然使用qmake对XMonitor进行单独编译构建。如果需要使用CMake构建XMonitor，请参看[CMake构建Qt工程实践](https://quantfabric.blog.csdn.net/article/details/123077371)。
+- 使用EPEL仓库安装Qt5：
+  ```bash
+  # 1. 安装dnf-plugins-core（提供 config-manager 工具）
+  sudo dnf install -y dnf-plugins-core
+  # 2. 启用 CRB 仓库
+  sudo dnf config-manager --set-enabled crb
+  # 3. 安装 EPEL 仓库
+  sudo dnf install -y epel-release
+  # 4. 安装Qt5
+  sudo dnf install -y qt5-qtbase-devel
+  sudo dnf install -y qt5-qtsvg-devel qt5-qttools-devel
+  ```
+
+- 安装X11转发进行身份验证工具：
+  ```bash
+    sudo dnf install -y xorg-x11-xauth
+    # 安装后，请务必断开当前SSH连接，然后重新登录，以使配置生效
+  ```
 
 ### QuantFabric模块
 #### Utils
@@ -343,7 +390,7 @@ std: 449.36
 - Monitor插件：展示Colo交易服务器实时性能指标，交易进程实时状态，提供交易进程管理功能。如下：
 <img src="images/Monitor.png" width="100%">
 
-- RiskJudge插件：提供风控系统流速限制、Ticker撤单限制、订单撤单限制相关参数设置；提供账户锁定功能；展示不同账户不同Ticker的累计撤单次数；展示风控系统事件日志。如下：
+- RiskJudge插件：风控系统提供程序化交易报备合规风控要求，包括流速限制，账户/合约锁定和恢复交易，交易指令检查(合约有效性、价格、数量)，防自成交，Ticker撤单限制、订单撤单限制、订单申报次数限制，策略层面合约持仓限制，账户层面合约持仓限制和净持仓限制；双击可修改风控限制参数。如下：
 <img src="images/RiskJudge.png" width="100%">
 
 - OrderManager插件：提供报单、撤单功能；展示账户仓位信息；展示账户挂单信息；展示账户历史订单记录；展示账户资金信息。如下：

@@ -28,3 +28,7 @@
 [submodule "XQuant"]
 	path = XQuant
 	url = git@github.com:QuantFabric/XQuant.git
+[submodule "XDataPlayer"]
+	path = XDataPlayer
+	url = git@github.com:QuantFabric/XDataPlayer.git
+
