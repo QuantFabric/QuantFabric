@@ -214,6 +214,7 @@ cp -rf yaml-cpp XOS/QuantFabric/XAPI/YAML-CPP/0.9.0/include/
   - 接收XTrader报单、撤单请求，进行风控检查，发送风控检查结果至XTrader；
   - 接收XTrader报单回报、撤单回报，管理订单状态，Ticker交易日内累计撤单计数。
 - 项目地址：[XRiskJudge](https://github.com/QuantFabric/XRiskJudge)
+- 注：**增加、修改实时生效。针对RiskLimitTable、PositionLimitTable表的删除，在XRiskJudge重启后生效，XMonitor客户端则在XServer删除相应二进制快照Bin文件后重启生效，生产环境通常为次日生效**。
 
 #### XTrader
 - 交易网关，采用插件架构适配不同Broker柜台交易API，主要功能如下：
